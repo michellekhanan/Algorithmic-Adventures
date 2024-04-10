@@ -1,8 +1,8 @@
 /*
-CSCI235 Summer 2023
-Project 1 - Character Class
-Georgina Woo
-June 14 2023
+CSCI235 Fall 2023
+Project 3 - Character Class
+Michelle Khanan
+October 6 2023
 Character.hpp declares the Character class along with its private and public members
 */
 #ifndef CHARACTER_HPP_
@@ -119,6 +119,36 @@ class Character
         Note: this is an accessor function and must follow the same convention as all accessor functions even if it is not called getEnemy
         */
         bool isEnemy() const;
+        /**
+        @param      : A const reference to the right hand side of the == operator.
+        @return     : Returns true if the right hand side character is "equal", false otherwise. 
+                    Two characters are equal if they have the same name, same race, same level and are either both an enemy or not.
+        NOTE: By this definition, only the aforementioned subset of the character's attributes must be equal for two characters 
+                to be deemed "equal".
+
+        Example: In order for character1 to be == to character2 we only need:
+        - The same name
+        - The same race
+        - The same level
+        - They must either be both an enemy or not
+        */
+        bool operator==(const Character& rhs_character) const;
+        /**
+        @param     `: A const reference to the right hand side of the != operator.
+        @return     : Returns true if the right hand side character is NOT "equal" (!=), false        
+                otherwise. Two characters are NOT equal if any of their name, race or level are
+                not equal, or if one is an enemy and the other is not.
+                NOTE: By this definition, one or more of the aforementioned subset of the 
+                character's attributes only must be different for two characters to be 
+                deemed "NOT equal".
+        */
+        bool operator!=(const Character& rhs_character) const;
+        /**
+        @post     : displays Character data in the form:
+            "[name_] is a Level [level_] [race_]. \nVitality: [vitality_] \nMax Armor: [armor_]
+             \n[They are / They are not] an enemy.\n" 
+        */
+        void display()const;
 
     private:
         //The name of the character (a string in UPPERCASE)
