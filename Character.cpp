@@ -1,8 +1,8 @@
 /*
 CSCI235 Fall 2023
-Project 4 - Character Class
+Project 6 - Character Class
 Michelle Khanan
-October 27 2023
+November 24 2023
 Character.cpp defines the constructors and private and public function implementation of the Character class
 */
 
@@ -271,4 +271,90 @@ void Character::display() const
     ". \nVitality: "<<vitality_<<
     "\nMax Armor: "<<armor_<<" \n"<<
     (enemy_ ? "They are an enemy.\n" : "They are not an enemy.\n");
+}
+
+
+/** BUFF ACTIONS */
+
+/**
+    @pre: This function is called to execute the Action BUFF_Heal
+    @post: Increases the character's vitality by 2
+*/
+void Character::heal()
+{
+    vitality_ += 2;
+}
+
+
+/**
+  @pre: This function is called to execute the Action BUFF_MendMetal
+  @post: Increases the character's armor by 2
+
+*/
+void Character::mendMetal()
+{
+    armor_ += 2;
+}
+
+
+/** ATTACK ACTIONS */
+
+/**
+  @pre: This function is called to execute the Action ATT_Strike
+  @param: A pointer to a character target
+  @post: Deals 2 points of damage to the target character. If the target has armor, their armor absorbs the damage but is depleted by the same number of points. For example, if the target has 1 armor point, their armor becomes 0 and they lose 1 vitality point.
+*/
+void Character::strike(Character* target)
+{
+    int damage = 2;
+    if (target->getArmor() > 0)
+    {
+        int armorpoints = target->getArmor();
+        target->setArmor(armorpoints - damage);
+        if (target->getArmor() < 0)
+        {
+            target->setVitality(target->getVitality() + target->getArmor());
+            target->setArmor(0);
+        }
+    }
+    else
+    {
+        target->setVitality(target->getVitality() - damage);
+    }
+}
+
+
+
+/**
+  @pre: This function is called to  execute the Action ATT_ThrowTomato
+  @param: A pointer to a character target
+  @post: Deals 1 point of damage to the target character. If the target has armor, their armor absorbs the damage but is depleted by the same number of points. For example, if the target has 1 armor point, their armor becomes 0 and they don't lose any vitality points. Your character gains 1 vitality point (as laughter is the best medicine).
+*/
+void Character::throwTomato(Character* target)
+{
+    int damage = 1;
+    if (target->getArmor() > 0)
+    {
+        int armorpoints = target->getArmor();
+        target->setArmor(armorpoints - damage);
+        if (target->getArmor() < 0)
+        {
+            target->setArmor(0);
+        }
+    }
+    else
+    {
+        target->setVitality(target->getVitality() - damage);
+    }
+    vitality_ += 1;
+}
+
+std::queue<int>& Character::getActionQueue() 
+{
+    return action_queue_;
+}
+
+std::stack<Buff>& Character::getBuffStack()
+{
+    return buff_stack_;
 }

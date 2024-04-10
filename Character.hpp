@@ -1,8 +1,8 @@
 /*
 CSCI235 Fall 2023
-Project 4 - Character Class
+Project 6 - Character Class
 Michelle Khanan
-October 27 2023
+November 24 2023
 Character.hpp declares the Character class along with its private and public members
 */
 #ifndef CHARACTER_HPP_
@@ -10,10 +10,23 @@ Character.hpp declares the Character class along with its private and public mem
 #include <iostream>
 #include <string>
 #include <cctype>
+#include <queue>
+#include <stack>
 
 enum Race
 {
     NONE, HUMAN, ELF, DWARF, LIZARD, UNDEAD
+};
+
+enum Action
+{
+    BUFF_Heal, BUFF_MendMetal, ATT_Strike, ATT_ThrowTomato
+};
+
+struct Buff 
+{
+    std::string name_;
+    int turns_; //the number of turns this Buff will last for
 };
 
 class Character
@@ -41,6 +54,8 @@ class Character
                         Hint: Notice the default arguments in the parameterized constructor.
         */
         Character(const std::string& name, const std::string& race, int vitality = 0, int armor = 0, int level = 0, bool enemy = false);
+
+        virtual ~Character() = default;
 
         /**
             @param  : the name of the Character
@@ -149,11 +164,47 @@ class Character
          @post     : displays Character data in the form:
         "[name_] is a Level [level_] [race_]. \nVitality: [vitality_] \nMax Armor: [armor_] \n[They are / They are not] an enemy.\n"     
         */
-        virtual void display() const = 0;
+        virtual void display() const;
+
+        /** BUFF ACTIONS */
+
         /**
-        @post: Modifies the character's private member variables (the exact modifications will be subclass specific)
+            @pre: This function is called to execute the Action BUFF_Heal
+            @post: Increases the character's vitality by 2
         */
-        virtual void eatTaintedStew() = 0;
+        void heal();
+
+
+        /**
+        @pre: This function is called to execute the Action BUFF_MendMetal
+        @post: Increases the character's armor by 2
+
+        */
+        void mendMetal();
+
+
+        /** ATTACK ACTIONS */
+
+        /**
+         @pre: This function is called to execute the Action ATT_Strike
+        @param: A pointer to a character target
+        @post: Deals 2 points of damage to the target character. If the target has armor, their armor absorbs the damage but is depleted by the same number of points. For example, if the target has 1 armor point, their armor becomes 0 and they lose 1 vitality point.
+        */
+        void strike(Character* target);
+
+
+
+        /**
+         @pre: This function is called to  execute the Action ATT_ThrowTomato
+        @param: A pointer to a character target
+        @post: Deals 1 point of damage to the target character. If the target has armor, their armor absorbs the damage but is depleted by the same number of points. For example, if the target has 1 armor point, their armor becomes 0 and they don't lose any vitality points. Your character gains 1 vitality point (as laughter is the best medicine).
+        */
+        void throwTomato(Character* target);
+
+        std::queue<int>& getActionQueue();
+
+        std::stack<Buff>& getBuffStack();
+
 
     private:
         //The name of the character (a string in UPPERCASE)
@@ -168,6 +219,10 @@ class Character
         int level_;
         // A flag indicating whether the character is an enemy
         bool enemy_;
+        // An action queue: a queue of integers to store actions a character wants to take during their turn (as integers that correspond to the enum Action)
+        std::queue<int> action_queue_;
+        // A buff stack: a stack of Buff objects the character can use during their turn
+        std::stack<Buff> buff_stack_;
 
 };
 
