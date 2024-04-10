@@ -1,8 +1,8 @@
 /*
 CSCI235 Fall 2023
-Project 3 - Character Class
+Project 4 - Character Class
 Michelle Khanan
-October 6 2023
+October 27 2023
 Character.hpp declares the Character class along with its private and public members
 */
 #ifndef CHARACTER_HPP_
@@ -119,36 +119,41 @@ class Character
         Note: this is an accessor function and must follow the same convention as all accessor functions even if it is not called getEnemy
         */
         bool isEnemy() const;
+
+
         /**
-        @param      : A const reference to the right hand side of the == operator.
-        @return     : Returns true if the right hand side character is "equal", false otherwise. 
-                    Two characters are equal if they have the same name, same race, same level and are either both an enemy or not.
-        NOTE: By this definition, only the aforementioned subset of the character's attributes must be equal for two characters 
-                to be deemed "equal".
+        @param     	: A reference to the right hand side of the == operator.
+        @return     : Returns true if the right hand side character is "equal", false otherwise. 									
+                     Two characters are equal if they have the same name, same race, same level 									
+                     and are either both an enemy or not.
+
+        Note: By this definition, only some of the character's attributes must be equal for two characters to be deemed "equal".
 
         Example: In order for character1 to be == to character2 we only need:
         - The same name
         - The same race
-        - The same level
+         - The same level
         - They must either be both an enemy or not
         */
-        bool operator==(const Character& rhs_character) const;
+        bool operator==(const Character& rhs) const;
+
         /**
-        @param     `: A const reference to the right hand side of the != operator.
-        @return     : Returns true if the right hand side character is NOT "equal" (!=), false        
-                otherwise. Two characters are NOT equal if any of their name, race or level are
-                not equal, or if one is an enemy and the other is not.
-                NOTE: By this definition, one or more of the aforementioned subset of the 
-                character's attributes only must be different for two characters to be 
-                deemed "NOT equal".
+            @param     `: A reference to the right hand side of the != operator.
+            @return     : Returns true if the right hand side character is NOT "equal" (!=), false 				
+						 otherwise. Two characters are NOT equal if any of their name, race or level are
+						not equal, or if one is an enemy and the other is not.
         */
-        bool operator!=(const Character& rhs_character) const;
+        bool operator!=(const Character& rhs) const;
+
         /**
-        @post     : displays Character data in the form:
-            "[name_] is a Level [level_] [race_]. \nVitality: [vitality_] \nMax Armor: [armor_]
-             \n[They are / They are not] an enemy.\n" 
+         @post     : displays Character data in the form:
+        "[name_] is a Level [level_] [race_]. \nVitality: [vitality_] \nMax Armor: [armor_] \n[They are / They are not] an enemy.\n"     
         */
-        void display()const;
+        virtual void display() const = 0;
+        /**
+        @post: Modifies the character's private member variables (the exact modifications will be subclass specific)
+        */
+        virtual void eatTaintedStew() = 0;
 
     private:
         //The name of the character (a string in UPPERCASE)

@@ -1,13 +1,12 @@
 /*
 CSCI235 Fall 2023
-Project 2 - Scoundrel Class
+Project 4 - Scoundrel Class
 Michelle Khanan
-September 22 2023
-Scoundrel.cpp implements the constructors and member functions of the Scoundrel class.
+October 27 2023
+Scoundrel.cpp defines the constructors and private and public function implementation of the Scoundrel class
 */
 
 #include "Scoundrel.hpp"
-#include "Character.hpp"
 
 /**
     Default constructor.
@@ -15,150 +14,147 @@ Scoundrel.cpp implements the constructors and member functions of the Scoundrel 
     Default character name: "NAMELESS". Booleans are default-initialized to False. 
     Default dagger: WOOD. Default faction: "NONE". 
 */
-Scoundrel::Scoundrel():Character(), dagger_{WOOD}, faction_{"NONE"}, has_disguise_{false}
+Scoundrel::Scoundrel() : Character(), dagger_{Dagger::WOOD}, faction_{"NONE"}, has_disguise_{false}
 {
 }
 
 /**
     Parameterized constructor.
-    @param      : The name of the character (a const string reference)
-    @param      : The race of the character (a const string reference)
-    @param      : The character's vitality (an integer). Default to 0
-    @param      : The character's max armor level (an integer). Default to 0
-    @param      : The character's level (an integer). Default to 0
-    @param      : A flag indicating whether the character is an enemy. Default to false.
-    @param      : The character's dagger type (a const string reference).
-                  String inputs can be in lowercase, but must be converted to 
-                  uppercase when setting the dagger enum. Default to WOOD
-    @param      : The character's Faction (a const string reference). 
-                  Valid Factions: [CUTPURSE, SHADOWBLADE, SILVERTONGUE] 
-                  String inputs can be in lowercase, but must be converted to 
-                  uppercase when setting the variable. Default to "NONE"
-    @param      : A flag indicating whether the character has a disguise. Default to false
-    @post       : The private members are set to the values of the corresponding 
-                  parameters.
-                 If the dagger type is not provided or invalid, the variable should 
-                  be set to WOOD. 
-                 If the Faction is not provided or invalid, the variable should be 
-                  set to "NONE". 
+           @param      : The name of the character (a const string reference)
+           @param      : The race of the character (a const string reference)
+           @param      : The character's vitality (an integer)
+           @param      : The character's max armor level (an integer)
+           @param      : The character's level (an integer)
+           @param      : A flag indicating whether the character is an enemy
+           @param      : The character's dagger type (a const string reference).
+    					String inputs can be in lowercase, but must be converted to 
+						uppercase when setting the dagger enum.
+           @param      : The character's Faction (a const string reference). 
+						Valid Factions: [CUTPURSE, SHADOWBLADE, SILVERTONGUE] 
+						String inputs can be in lowercase, but must be converted to 
+						uppercase when setting the variable.
+           @param      : A flag indicating whether the character has a disguise
+          @post        : The private members are set to the values of the corresponding 
+						parameters.
+ 						If the dagger type is not provided or invalid, the variable should 
+						be set to WOOD. 
+    	                If the Faction is not provided or invalid, the variable should be 
+						set to "NONE". 
 */
-Scoundrel::Scoundrel(const string& name, const string& race, int vitality, int armor, int level, bool enemy, string dagger, string faction, bool has_disguise):Character(name, race, vitality, armor, level, enemy)
+Scoundrel::Scoundrel(const std::string& name, const std::string& race, int vitality, int armor, int level, bool enemy, const std::string& dagger, const std::string& faction, bool has_disguise) 
+: Character(name, race, vitality, armor, level, enemy), has_disguise_{has_disguise}
 {
     setDagger(dagger);
-    setFaction(faction);
-    has_disguise_ = has_disguise;
+    if(!setFaction(faction))
+    {
+        faction_ = "NONE";
+    }
 }
-
 /**
-   @param     : a reference to a string representing the dagger type
-   @post      : sets the private member variable to the value of the parameter. 
-                String inputs can be in lowercase, but must be converted to 
-                uppercase when setting the variable.
-                If the dagger type is not valid (i.e, is one of the following: 
-                [WOOD, BRONZE, IRON, STEEL, MITHRIL, ADAMANT, RUNE]), 
-                the variable should be set to WOOD. 
+    @param  : a reference to a string representing the dagger type
+    @post   : sets the private member variable to the value of the parameter. 
+            : If the dagger type is not valid (i.e, is one of the following: [WOOD, BRONZE, IRON, STEEL, MITHRIL, ADAMANT, RUNE]), the variable should be set to WOOD. 
 **/
-void Scoundrel::setDagger(const string& dagger)
+void Scoundrel::setDagger(const std::string& dagger)
 {
-    string new_dagger = "";
-    for(int i = 0; i<dagger.size();i++)
+    std::string dagger_upper = dagger;
+    for(int i = 0; i < dagger_upper.length(); i++)
     {
-            new_dagger += toupper(dagger[i]);
+        if(isalpha(dagger_upper[i]))
+        {
+            dagger_upper[i] = toupper(dagger_upper[i]);
+        }
     }
-    if(new_dagger == "WOOD")
+    if(dagger_upper == "BRONZE")
     {
-        dagger_ = WOOD; 
+        dagger_ = Dagger::BRONZE;
     }
-    else if(new_dagger == "BRONZE")
+    else if(dagger_upper == "IRON")
     {
-        dagger_ = BRONZE; 
+        dagger_ = Dagger::IRON;
     }
-    else if(new_dagger == "IRON")
+    else if(dagger_upper == "STEEL")
     {
-        dagger_ = IRON; 
+        dagger_ = Dagger::STEEL;
     }
-    else if(new_dagger == "STEEL")
+    else if(dagger_upper == "MITHRIL")
     {
-        dagger_ = STEEL; 
+        dagger_ = Dagger::MITHRIL;
     }
-    else if(new_dagger == "MITHRIL")
+    else if(dagger_upper == "ADAMANT")
     {
-        dagger_ = MITHRIL; 
+        dagger_ = Dagger::ADAMANT;
     }
-    else if(new_dagger == "ADAMANT")
+    else if(dagger_upper == "RUNE")
     {
-        dagger_ = ADAMANT; 
-    }
-    else if(new_dagger == "RUNE")
-    {
-        dagger_ = RUNE; 
+        dagger_ = Dagger::RUNE;
     }
     else
     {
-        dagger_ = WOOD;
+        dagger_ = Dagger::WOOD;
     }
-
 }
 
+
 /**
-  @return     : the string indicating the character's dagger type
+    @return  : the string indicating the character's dagger type
 **/
-string Scoundrel::getDagger()const
+std::string Scoundrel::getDagger() const
 {
-    if(dagger_ == WOOD)
-    {
-        return "WOOD"; 
-    }
-    else if(dagger_ == BRONZE)
-    {
-        return "BRONZE"; 
-    }
-    else if(dagger_ == IRON)
-    {
-        return "IRON"; 
-    }
-    else if(dagger_ == STEEL)
-    {
-        return "STEEL"; 
-    }
-    else if(dagger_ == MITHRIL)
-    {
-        return "MITHRIL"; 
-    }
-    else if(dagger_ == ADAMANT)
-    {
-        return "ADAMANT"; 
-    }
-    else if(dagger_ == RUNE)
-    {
-        return "RUNE"; 
-    }
-    else
+    if(dagger_ == Dagger::WOOD)
     {
         return "WOOD";
     }
+    else if(dagger_ == Dagger::BRONZE)
+    {
+        return "BRONZE";
+    }
+    else if(dagger_ == Dagger::IRON)
+    {
+        return "IRON";
+    }
+    else if(dagger_ == Dagger::STEEL)
+    {
+        return "STEEL";
+    }
+    else if(dagger_ == Dagger::MITHRIL)
+    {
+        return "MITHRIL";
+    }
+    else if(dagger_ == Dagger::ADAMANT)
+    {
+        return "ADAMANT";
+    }
+    else
+    {
+        return "RUNE";
+    }
 }
 
+
 /**
-    @param    : a reference to a string representing the character's Faction
-    @post     : sets the private member variable to the value of the parameter. 
-                String inputs can be in lowercase, but must be converted to 
-                uppercase when setting the variable.
-                If the provided faction is not one of the following: 
-               [NONE, CUTPURSE, SHADOWBLADE, SILVERTONGUE], 
-               do nothing and return false.
-    @return   : true if setting the variable was successful, false otherwise.
+        @param  	: a reference to a string representing the character's Faction
+        @post   	: sets the private member variable to the value of the parameter. 
+    				String inputs can be in lowercase, but must be converted to 
+					uppercase when setting the variable.
+            	    If the provided faction is not one of the following: 
+            	    [NONE, CUTPURSE, SHADOWBLADE, SILVERTONGUE], 
+            	     do nothing and return false.
+        @return  	: true if setting the variable was successful, false otherwise.
 **/
-bool Scoundrel::setFaction(const string& faction)
+bool Scoundrel::setFaction(const std::string& faction)
 {
-    string new_faction = "";
-    for(int i = 0; i<faction.size();i++)
+    std::string faction_upper = faction;
+    for(int i = 0; i < faction_upper.length(); i++)
     {
-            new_faction += toupper(faction[i]);
+        if(isalpha(faction_upper[i]))
+        {
+            faction_upper[i] = toupper(faction_upper[i]);
+        }
     }
-    if (new_faction == "NONE" || new_faction == "CUTPURSE" || new_faction == "SHADOWBLADE" || new_faction == "SILVERTONGUE")
+    if(faction_upper == "CUTPURSE" || faction_upper == "SHADOWBLADE" || faction_upper == "SILVERTONGUE" || faction_upper == "NONE")
     {
-        faction_ = new_faction;
+        faction_ = faction_upper;
         return true;
     }
     else
@@ -167,27 +163,93 @@ bool Scoundrel::setFaction(const string& faction)
     }
 }
 
+
 /**
-  @return  : the string indicating the character's Faction
+    @return  : the string indicating the character's Faction
 **/
-string Scoundrel::getFaction()const
+std::string Scoundrel::getFaction() const
 {
     return faction_;
 }
 
 /**
-  @param  : a reference to boolean
-  @post   : sets the private member variable indicating whether the character has a disguise
+    @param  : a reference to boolean
+    @post   : sets the private member variable indicating whether the character has a disguise
 **/
 void Scoundrel::setDisguise(const bool& has_disguise)
 {
     has_disguise_ = has_disguise;
 }
 
+
 /**
-  @return  : the visual aid flag
+    @return  : the visual aid flag
 **/
-bool Scoundrel::hasDisguise()const
+bool Scoundrel::hasDisguise() const
 {
     return has_disguise_;
+} 
+
+/**
+    @post     : displays Scoundrel data in the form:
+    "[NAME] is a Level [LEVEL] [RACE] SCOUNDREL.
+    \nVitality: [VITALITY]
+    \nArmor: [ARMOR]
+    \nThey are [an enemy/not an enemy].
+    \nDagger: [DAGGER]
+    \nFaction: [FACTION]
+    \nDisguise: [TRUE/FALSE]
+    \n\n"
+    
+    Example:
+    FLEA is a Level 4 DWARF SCOUNDREL.
+    Vitality: 6
+    Armor: 4
+    They are an enemy.
+    Dagger: ADAMANT
+    Faction: CUTPURSE
+    Disguise: TRUE
+*/
+void Scoundrel::display() const
+{
+    std::cout << getName() << " is a Level " << getLevel() << " " << getRace() << " SCOUNDREL.\n";
+    std::cout << "Vitality: " << getVitality() << "\n";
+    std::cout << "Armor: " << getArmor() << "\n";
+    std::cout << "They are " << (isEnemy() ? "an enemy" : "not an enemy") << ".\n";
+    std::cout << "Dagger: " << getDagger() << "\n";
+    std::cout << "Faction: " << getFaction() << "\n";
+    std::cout << "Disguise: " << (hasDisguise() ? "TRUE" : "FALSE") << "\n";
+    std::cout << "\n";
+}
+    
+/**
+    @post: 
+    If the character is UNDEAD, gain 3 Vitality points. Nothing else happens. 
+    
+    If the character is NOT UNDEAD, their Vitality is set to 1. 
+    In addition, as a Scoundrel: If the character is of the CUTPURSE faction, they steal a health potion and recover 3 Vitality points. 
+    If they are of the SILVERTONGUE faction, they talk the cook into redoing their stew as follows: they have a 70% chance of recovering 4 Vitality points, but a 30% chance of resetting their Vitality to 1, and they lose their daggers, which are replaced with WOOD daggers. (If their daggers were already WOOD, nothing happens to the daggers). 
+*/
+void Scoundrel::eatTaintedStew()
+{
+    if (getRace() == "UNDEAD") 
+    {
+        setVitality(getVitality() + 3);
+    } else {
+        setVitality(1);
+        if (getFaction() == "CUTPURSE") 
+        {
+            setVitality(getVitality() + 3);
+        } else if (getFaction() == "SILVERTONGUE") 
+        {
+            int random = rand() % 100;
+            if (random < 70) 
+            {
+                setVitality(getVitality() + 4);
+            } else {
+                setVitality(1);
+                setDagger("WOOD");
+            }
+        }
+    }
 }

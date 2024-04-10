@@ -1,83 +1,76 @@
 /*
 CSCI235 Fall 2023
-Project 2 - Mage Class
+Project 4 - Mage Class
 Michelle Khanan
-September 22 2023
-Mage.cpp implements the constructors and member functions of the Mage class.
+October 27 2023
+Mage.cpp defines the constructors and private and public function implementation of the Mage class
 */
 
 #include "Mage.hpp"
-#include "Character.hpp"
 
 /**
-  Default constructor.
-  Default-initializes all private members. 
-  Default character name: "NAMELESS". Booleans are default-initialized to False. 
-  Default school of magic and weapon: "NONE". 
+    Default constructor.
+    Default-initializes all private members. 
+    Default character name: "NAMELESS". Booleans are default-initialized to False. 
+    Default school of magic and weapon: "NONE". 
 */
-Mage::Mage():Character(), school_of_magic_{"NONE"}, weapon_{"NONE"}, can_summon_incarnate_{false}
+Mage::Mage() : Character(), school_of_magic_{"NONE"}, weapon_{"NONE"}, can_summon_incarnate_{false}
 {
 }
 
 /**
-  Parameterized constructor.
-  @param      : The name of the character (a const string reference)
-  @param      : The race of the character (a const string reference)
-  @param      : The character's vitality (an integer). Default to 0
-  @param      : The character's max armor level (an integer). Default to 0
-  @param      : The character's level (an integer). Default to 0
-  @param      : A flag indicating whether the character is an enemy. Default to false.
-  @param      : The character's school of magic (a const string reference). Valid schools: 
-                [ELEMENTAL, NECROMANCY, ILLUSION]. 
-                String inputs can be in lowercase, but must be converted to 
-                uppercase when setting the variable.
-                If the school name is invalid, set it to "NONE"
-  @param      : The character's choice of weapon (a const string reference). 
-                Valid weapons: [WAND, STAFF]
-                String inputs can be in lowercase, but must be converted to 
-                uppercase when setting the variable.
-                If the weapon is invalid, set it to "NONE"
-  @param      : A flag indicating whether the character is able to summon an 
-                incarnate. Default to false.
-  @post       : The private members are set to the values of the corresponding 
-                parameters.
-                REMEMBER: If the school of magic or weapon is not provided or invalid, the 
-                variables should be set to "NONE". 
+    Parameterized constructor.
+    @param      : The name of the character (a string)
+    @param      : The race of the character (a const string reference)
+    @param      : The character's vitality (an integer)
+    @param      : The character's max armor level (an integer)
+    @param      : The character's level (an integer)
+    @param      : A flag indicating whether the character is an enemy
+    @param      : The character's school of magic (a string). Valid schools: [ELEMENTAL, NECROMANCY, ILLUSION]. 
+                 String inputs can be in lowercase, but must be converted to uppercase when setting the variable.
+                 If the school name is invalid, set it to "NONE"
+    @param      : The character's choice of weapon (a string). Valid weapons: [WAND, STAFF]
+                  String inputs can be in lowercase, but must be converted to 
+				  uppercase when setting the variable.
+				  If the weapon is invalid, set it to "NONE"
+    @param      : A flag indicating whether the character is able to summon an incarnate
+    @post       : The private members are set to the values of the corresponding parameters.
+                  If the school of magic or weapon is not provided or valid, the variables should be set to "NONE". 
 */
-
-Mage::Mage(const string& name, const string& race, int vitality, int armor, int level, bool enemy, string school_of_magic, string weapon, bool can_summon_incarnate):Character(name, race, vitality, armor, level, enemy)
+Mage::Mage(const std::string& name, const std::string& race, int vitality, int armor, int level, bool enemy, const std::string& school_of_magic, const std::string& weapon, bool can_summon_incarnate) 
+: Character(name, race, vitality, armor, level, enemy), can_summon_incarnate_{can_summon_incarnate}
 {
     if (!setSchool(school_of_magic))
     {
         school_of_magic_ = "NONE";
     }
-    if (!setCastingWeapon(weapon))
+    if(!setCastingWeapon(weapon))
     {
         weapon_ = "NONE";
     }
-    can_summon_incarnate_ = can_summon_incarnate;
 }
 
 /**
     @param  : a reference to a string representing the school of magic
-    @post   : sets the private member variable to the value of the parameter. If 
-              the provided school of magic is not one of the following: [ELEMENTAL, 
-              NECROMANCY, ILLUSION], do nothing and return false.
-              String inputs can be in lowercase, but must be converted to 
-              uppercase when setting the variable.
+    @post   : sets the private member variable to the value of the parameter. 
+              If the provided school of magic is not one of the following: [ELEMENTAL, NECROMANCY, ILLUSION], 
+              do nothing and return false.
+              String inputs can be in lowercase, but must be converted to uppercase when setting the variable.
     @return  : true if setting the variable was successful, false otherwise.
 **/
-
-bool Mage::setSchool(const string& school_of_magic)
+bool Mage::setSchool(const std::string& school_of_magic)
 {
-    string new_school_of_magic = "";
-    for(int i = 0; i<school_of_magic.size();i++)
+    std::string school_upper = school_of_magic;
+    for(int i = 0;i<school_of_magic.size();i++)
     {
-            new_school_of_magic += toupper(school_of_magic[i]);
+        if(isalpha(school_of_magic[i]))
+        {
+            school_upper[i] = toupper(school_of_magic[i]); 
+        }
     }
-    if (new_school_of_magic == "ELEMENTAL" || new_school_of_magic == "NECROMANCY" || new_school_of_magic == "ILLUSION")
+    if(school_upper == "ELEMENTAL" || school_upper == "NECROMANCY" || school_upper == "ILLUSION")
     {
-        school_of_magic_ = new_school_of_magic;
+        school_of_magic_ = school_upper;
         return true;
     }
     else
@@ -86,34 +79,36 @@ bool Mage::setSchool(const string& school_of_magic)
     }
 }
 
+
 /**
-  @return  : the string indicating the character's school of magic
+    @return  : the string indicating the character's school of magic
 **/
-string Mage::getSchool()const
+std::string Mage::getSchool() const
 {
     return school_of_magic_;
 }
 
+
 /**
     @param  : a reference to a string representing the character's weapon
-    @post   : sets the private member variable to the value of the parameter.
-              String inputs can be in lowercase, but must be converted to 
-              uppercase when setting the variable.
-              If the provided weapon is not one of the following: 
-              [WAND, STAFF], do nothing and return false.
+    @post   : sets the private member variable to the value of the parameter. 
+              String inputs can be in lowercase, but must be converted to uppercase when setting the variable.
+              If the provided weapon is not one of the following: [WAND, STAFF], do nothing and return false.
     @return  : true if setting the variable was successful, false otherwise.
 **/
-
-bool Mage::setCastingWeapon(const string& weapon)
+bool Mage::setCastingWeapon(const std::string& weapon)
 {
-    string new_weapon = "";
-    for(int i = 0; i<weapon.size();i++)
+    std::string weapon_upper = weapon;
+    for(int i = 0;i<weapon.size();i++)
     {
-            new_weapon += toupper(weapon[i]);
+        if(isalpha(weapon[i]))
+        {
+            weapon_upper[i] = toupper(weapon[i]); 
+        }
     }
-    if (new_weapon == "WAND" || new_weapon == "STAFF")
+    if(weapon_upper == "WAND" || weapon_upper == "STAFF")
     {
-        weapon_ = new_weapon;
+        weapon_ = weapon_upper;
         return true;
     }
     else
@@ -122,18 +117,18 @@ bool Mage::setCastingWeapon(const string& weapon)
     }
 }
 
+
 /**
-  @return  : the string indicating the character's weapon
+    @return  : the string indicating the character's weapon
 **/
-string Mage::getCastingWeapon()const
+std::string Mage::getCastingWeapon() const
 {
     return weapon_;
 }
 
 /**
-  @param  : a reference to boolean
-  @post   : sets the private member variable indicating whether the character can 
-            summon an incarnate
+    @param  : a reference to boolean
+    @post   : sets the private member variable indicating whether the character can summon an incarnate
 **/
 void Mage::setIncarnateSummon(const bool& can_summon_incarnate)
 {
@@ -141,9 +136,73 @@ void Mage::setIncarnateSummon(const bool& can_summon_incarnate)
 }
 
 /**
-  @return  : the summon-incarnate flag
+    @return  : the summon-incarnate flag
 **/
-bool Mage::hasIncarnateSummon()const
+bool Mage::hasIncarnateSummon() const
 {
     return can_summon_incarnate_;
+}
+
+/**
+    @post     : displays Mage data in the form:
+    "[NAME] is a Level [LEVEL] [RACE] MAGE.
+    \nVitality: [VITALITY]
+    \nArmor: [ARMOR]
+    \nThey are [an enemy/not an enemy].
+    \nSchool of Magic: [SCHOOL]
+    \nWeapon: [WEAPON]
+    \nThey [can/cannot] summon an Incarnate.
+    \n\n"
+    
+    Example:
+    SPYNACH is a Level 4 ELF MAGE.
+    Vitality: 6
+    Armor: 4
+    They are not an enemy.
+    School of Magic: ILLUSION
+    Weapon: WAND
+    They can summon an Incarnate.
+*/
+void Mage::display() const
+{
+    std::cout << getName() << " is a Level " << getLevel() << " " << getRace() << " MAGE.\n";
+    std::cout << "Vitality: " << getVitality() << "\n";
+    std::cout << "Armor: " << getArmor() << "\n";
+    std::cout << "They are " << (isEnemy() ? "an enemy" : "not an enemy") << ".\n";
+    std::cout << "School of Magic: " << getSchool() << "\n";
+    std::cout << "Weapon: " << getCastingWeapon() << "\n";
+    std::cout << "They " << (hasIncarnateSummon() ? "can summon an Incarnate" : "cannot summon an Incarnate") << ".\n";
+    std::cout << "\n";
+}
+
+/**
+    @post: 
+    If the character is UNDEAD, gain 3 Vitality points. Nothing else happens.
+    
+    If the character is NOT UNDEAD, Vitality is set to 1. 
+    In addition, as a Mage: 
+    If the character is equipped with a wand or staff, they cast a healing ritual and recover vitality points – 2 points with a wand, 3 with a staff.
+    If they can summon an incarnate, the emotional support allows the character to recover 1 Vitality point.
+*/
+void Mage::eatTaintedStew()
+{
+    if (getRace() == "UNDEAD")
+    {
+        setVitality(getVitality() + 3);
+    }
+    else {
+        setVitality(1);
+        if (getCastingWeapon() == "WAND")
+        {
+        setVitality(getVitality() + 2);
+        }
+        else if (getCastingWeapon() == "STAFF")
+        {
+        setVitality(getVitality() + 3);
+        }
+        if (hasIncarnateSummon())
+        {
+        setVitality(getVitality() + 1);
+        }
+    }
 }

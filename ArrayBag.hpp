@@ -1,9 +1,6 @@
 /*
-CSCI235 Fall 2023
-Project 3 - ArrayBag Class
-Michelle Khanan
-October 6 2023
-ArrayBag.hpp declares the ArrayBag class along with its private and public members
+ArrayBag interface for term project
+CSCI 235 Fall 2023
 */
 
 #ifndef ARRAY_BAG_
@@ -53,19 +50,26 @@ class ArrayBag
        @return the number of times an_entry is found in items_
    **/
    int getFrequencyOf(const ItemType &an_entry) const;
-   /** @param:   A const reference to another ArrayBag object
-    @post:    Combines the contents from both ArrayBag objects, EXCLUDING duplicates.
-    Example: [1, 2, 3] += [1, 4] will produce [1, 2, 3, 4]
-    */
-    void operator/=(const ArrayBag<ItemType>& other_object);
 
-    /**
-    @param:   A const reference to another ArrayBag object
-    @post:    Combines the contents from both ArrayBag objects, including duplicates, 
-              adding items from the argument bag as long as there is space.
-              Example: [1, 2, 3] += [1, 4] will produce [1, 2, 3, 1, 4]
-    */
-    void operator+=(const ArrayBag<ItemType>& other_object);
+
+   /**
+     @return a vector having the same cotntents as items_
+     **/
+    std::vector<ItemType> toVector() const;
+
+
+   /**
+    @param:   A reference to another ArrayBag object
+   @post:    Combines the contents from both ArrayBag objects, including duplicates.
+   Example: [1, 2, 3] /= [1, 4] will produce [1, 2, 3, 1, 4]
+   */
+   void operator/=(const ArrayBag<ItemType> &rhs);
+
+   /** @param:   A reference to another ArrayBag object
+      @post:    Combines the contents from both ArrayBag objects, EXCLUDING duplicates.
+      Example: [1, 2, 3] += [1, 4] will produce [1, 2, 3, 4]
+   */
+   void operator+=(const ArrayBag<ItemType> &rhs);
 
    protected:
    static const int DEFAULT_CAPACITY = 100; //max size of items_ at 100 by default for this project

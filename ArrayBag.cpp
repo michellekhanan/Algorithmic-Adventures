@@ -1,10 +1,8 @@
 /*
-CSCI235 Fall 2023
-Project 3 - ArrayBag Class
-Michelle Khanan
-October 6 2023
-ArrayBag.cpp defines the constructors and private and public function implementation of the ArrayBag class
+ArrayBag interface for term project
+CSCI 235 Fall 2023
 */
+
 
 #include "ArrayBag.hpp"
 
@@ -136,34 +134,69 @@ int ArrayBag<ItemType>::getIndexOf(const ItemType& target) const
    return result;
 }  // end getIndexOf
 
-/** @param:   A const reference to another ArrayBag object
-    @post:    Combines the contents from both ArrayBag objects, EXCLUDING duplicates.
-    Example: [1, 2, 3] += [1, 4] will produce [1, 2, 3, 4]
-*/
-template<class ItemType>
-void ArrayBag<ItemType>::operator/=(const ArrayBag<ItemType>& other_object)
-{
-   for (int i = 0; i < other_object.item_count_; i++)
-   {
-      if (!contains(other_object.items_[i]))
-      {
-         add(other_object.items_[i]);
-      }
-   }
-}
 
 
 /**
-    @param:   A const reference to another ArrayBag object
-    @post:    Combines the contents from both ArrayBag objects, including duplicates, 
-              adding items from the argument bag as long as there is space.
-              Example: [1, 2, 3] += [1, 4] will produce [1, 2, 3, 1, 4]
+ @return a vector having the same cotntents as items_
+ **/
+template<class ItemType>
+std::vector<ItemType> ArrayBag<ItemType>::toVector() const
+{
+   std::vector<ItemType> bag_contents;
+	for (int i = 0; i < item_count_; i++)
+		bag_contents.push_back(items_[i]);
+      
+   return bag_contents;
+}  // end toVector
+
+
+
+/** @param:   A reference to another ArrayBag object
+    @post:    Combines the contents from both ArrayBag objects, EXCLUDING duplicates.
+    Example: [1, 2, 3] /= [1, 4] will produce [1, 2, 3, 4]
 */
 template<class ItemType>
-void ArrayBag<ItemType>::operator+=(const ArrayBag<ItemType>& other_object2) 
+void ArrayBag<ItemType>::operator/=(const ArrayBag<ItemType> &rhs)
 {
-   for (int i = 0; i < other_object2.item_count_; i++)
+  int index = 0;
+  int itemsToAdd = rhs.item_count_;
+  while (itemsToAdd > 0)
+  {
+    if (this->item_count_ == DEFAULT_CAPACITY)
+    {
+      break;
+    }
+    if (contains(rhs.items_[index]))
+    {
+      index++;
+      itemsToAdd--;
+      continue;
+    }
+   this->add(rhs.items_[index]);
+
+   index++;
+   itemsToAdd--;
+  }
+}
+
+/**
+    @param:   A reference to another ArrayBag object
+    @post:    Combines the contents from both ArrayBag objects, including duplicates.
+    Example: [1, 2, 3] += [1, 4] will produce [1, 2, 3, 1, 4]
+*/
+template<class ItemType>
+void ArrayBag<ItemType>::operator+=(const ArrayBag<ItemType> &rhs)
+{
+  int index = 0;
+  int itemsToAdd = rhs.item_count_;
+  while (itemsToAdd > 0)
+  {
+   if (item_count_ == DEFAULT_CAPACITY)
    {
-         add(other_object2.items_[i]);
+      break;
    }
+   add(rhs.items_[index]);
+   index++;
+   itemsToAdd--;
+  }
 }
